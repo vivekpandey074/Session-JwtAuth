@@ -31,12 +31,14 @@ function setUser(user){
     //this will return JSON Web Token created with above secretKey
    return jwt.sign({
     _id:user._id,
-    email:user.email
+    email:user.email,
+    role:user.role,
    },secretKey);
 }
 
 
 function getUser(token){
+    console.log("Inside getuser token")
    if(!token) return null;
     //this will return the payload else return error
 

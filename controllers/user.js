@@ -19,10 +19,15 @@ async function handleUserLogin(req,res){
 // res.cookie("uid",sessionId)
 //  return res.redirect("/")
 
+console.log("Insider Post Request for Login")
 
 //JWT based auth
  const token=setUser(user);
-res.cookie("uid",token)
+res.cookie("token",token)
+//    return res.json({token:token});
+
+console.log("Got the token-->",token)
+console.log("Redirecting to (/) home page")
  return res.redirect("/")
 }
 

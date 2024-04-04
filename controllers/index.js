@@ -3,7 +3,7 @@ const URL=require("../models/urls")
 
 async function handleCreateShortUrl (req,res){
    if(!req.body) return res.status(400).json({error:"Url is required"});
-
+  console.log("Insider Post Creating SHort url")
    const nanoID=shortid(8);
 
   const  result=await URL.create({
@@ -50,7 +50,7 @@ async function handleCreateShortUrl (req,res){
 async function handleAnalytics(req,res){
     const shortUrl=req.params.shortId;
     const result=await URL.findOne({shortUrl})
-console.log(result);
+
     return res.json({totalClicks:result.visitHistory.length,
     analytics:result.visitHistory})
 }

@@ -7,7 +7,7 @@ const staticRouter=require("./routes/staticRoutes")
 const userRouter=require("./routes/user")
 
 const cookieParser=require("cookie-parser");
-const { restrictToLoggedInUserOnly, checkAuth } = require("./middlewares/auth");
+const { checkAuthentication,restrictTo } = require("./middlewares/auth");
 
 const Port=8001;
 
@@ -28,10 +28,11 @@ app.set("views",path.resolve("./views"))  //telling path of our ejs
 app.use(express.urlencoded({extended:false}))
 app.use(express.json());
 app.use(cookieParser());
+app.use(checkAuthentication);
 
 //Routes
-app.use("/",checkAuth,staticRouter);
-app.use("/url",restrictToLoggedInUserOnly,urlRouter);
+app.use("/",staticRouter);
+app.use("/url",restrictTo(["NORMAL","ADMIN"]),urlRouter);
 app.use("/user",userRouter);
 
 
@@ -42,5 +43,8 @@ app.listen(Port,()=>{
 
 
 
-
+//                                                                                                 redirecting to login                                                                                                                                         (we are on our path to reach "/"(home)) but bodygaurd restrictTo(middleware) want to check our authorization           
+// client----> checkAuthentication(middlware)---->(req.user==null)------>restrictTo(middleware)--------------------------------------> 1.LoginScreen Page--------------->From Login Page we will be  -------------------------> CheckAuthencation will give -------------------------------------------------------------------------------------------------------------------------->Once authroizaed, we will acces home page, other url can only be access if autorized 
+//            (Initially, we are not loggedin)                       (No user, go login first)                                       2.Post request on user/login       redirected to "/"(Home) but                            User after validating token
+//                                                                                                                                   3.Got the token                    but checkAuthentication middleware will come
 
